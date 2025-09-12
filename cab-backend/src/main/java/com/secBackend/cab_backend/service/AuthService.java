@@ -32,6 +32,7 @@ public class AuthService {
         this.driverRepo = driverRepo;
         this.passwordEncoder = passwordEncoder;
     }
+    private DriverProfile driverProfile;
 
 
     //Register The User
@@ -43,19 +44,30 @@ public class AuthService {
        user.setPassword(passwordEncoder.encode(registerUserRequest.getPassword()));
        user.setRole(Role.valueOf(registerUserRequest.getRole().toUpperCase()));
 
-       userRepo.save(user);
+       if(registerUserRequest.getDriverDetails()==null){
+           userRepo.save(user);
+       }
 
         //If The Register User Is Driver
        if(user.getRole()==Role.DRIVER && registerUserRequest.getDriverDetails() != null){
-           DriverProfile driverProfile = new DriverProfile();
+           Optional<DriverProfile> existingDriver=driverRepo.findByLicenseNumber(registerUserRequest.getDriverDetails().getLicenseNumber());
+           if(existingDriver.isPresent()){
+               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Diving Licence Already Exist"));
+           }
+           existingDriver=driverRepo.findByVehicleNumber(registerUserRequest.getDriverDetails().getVehicleNumber());
+           if(existingDriver.isPresent()){
+               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "vehicle already exist"));
+           }
+           driverProfile = new DriverProfile();
            driverProfile.setUser(user);
            driverProfile.setLicenseNumber(registerUserRequest.getDriverDetails().
                    getLicenseNumber());
            driverProfile.setVehicleNumber(registerUserRequest.getDriverDetails().
                    getVehicleNumber());
-            driverRepo.save(driverProfile);
-
+           userRepo.save(user);
+           driverRepo.save(driverProfile);
        }
+
        return  ResponseEntity.status(HttpStatus.OK).body(Map.of("message",
                registerUserRequest.getRole()+" registered successfully!"));
    }

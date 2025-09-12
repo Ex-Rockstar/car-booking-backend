@@ -1,5 +1,6 @@
 package com.secBackend.cab_backend.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.secBackend.cab_backend.enumerations.Role;
 import jakarta.persistence.*;
@@ -18,11 +19,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String username;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String email;
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String phoneNumber;
+    @JsonIgnore
+    @Column(nullable = false)
     private String password;
     @Enumerated(EnumType.STRING)
     private Role role;

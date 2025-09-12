@@ -23,7 +23,9 @@ public class DriverProfile {
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User user;
+    @Column(unique = true, nullable = false)
     private String licenseNumber;
+    @Column(unique = true, nullable = false)
     private String vehicleNumber;
 
 
