@@ -1,6 +1,6 @@
 package com.secBackend.cab_backend.filter;
 
-import com.secBackend.cab_backend.jwt.JwtUtil;
+import com.secBackend.cab_backend.Util.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

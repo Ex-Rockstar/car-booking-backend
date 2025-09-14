@@ -5,8 +5,8 @@ import com.secBackend.cab_backend.model.DriverProfile;
 import com.secBackend.cab_backend.dataTansferObject.RegisterUserRequest;
 import com.secBackend.cab_backend.enumerations.Role;
 import com.secBackend.cab_backend.model.User;
-import com.secBackend.cab_backend.repository.driverProfileRepository;
-import com.secBackend.cab_backend.repository.userRepository;
+import com.secBackend.cab_backend.repository.DriverProfileRepository;
+import com.secBackend.cab_backend.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,13 +20,13 @@ import java.util.Optional;
 public class AuthService {
 
 
-    private userRepository userRepo;
-    private driverProfileRepository driverRepo;
+    private UserRepository userRepo;
+    private DriverProfileRepository driverRepo;
     private BCryptPasswordEncoder passwordEncoder;
 
     //Constructor For The Above Field
-    public AuthService(userRepository userRepo,
-                       driverProfileRepository driverRepo,
+    public AuthService(UserRepository userRepo,
+                       DriverProfileRepository driverRepo,
                        BCryptPasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.driverRepo = driverRepo;

@@ -3,8 +3,8 @@ import com.secBackend.cab_backend.dataTansferObject.DriverDetailDto;
 import com.secBackend.cab_backend.enumerations.Role;
 import com.secBackend.cab_backend.model.DriverProfile;
 import com.secBackend.cab_backend.model.User;
-import com.secBackend.cab_backend.repository.driverProfileRepository;
-import com.secBackend.cab_backend.repository.userRepository;
+import com.secBackend.cab_backend.repository.DriverProfileRepository;
+import com.secBackend.cab_backend.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -14,9 +14,9 @@ import java.util.List;
 @Service
 public class AdminService {
 
-    private final userRepository userRepository;
-    private final driverProfileRepository driverProfileRepository;
-    public AdminService(userRepository userRepository, driverProfileRepository driverProfileRepository) {
+    private final UserRepository userRepository;
+    private final DriverProfileRepository driverProfileRepository;
+    public AdminService(UserRepository userRepository, DriverProfileRepository driverProfileRepository) {
         this.userRepository = userRepository;
         this.driverProfileRepository = driverProfileRepository;
     }

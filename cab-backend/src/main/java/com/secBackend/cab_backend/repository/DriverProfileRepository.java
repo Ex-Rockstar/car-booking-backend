@@ -8,7 +8,7 @@ import java.util.Optional;
 
 @Repository
 //Driver Repository
-public interface driverProfileRepository extends JpaRepository<DriverProfile,Long> {
+public interface DriverProfileRepository extends JpaRepository<DriverProfile,Long> {
     Optional<DriverProfile> findByLicenseNumber(String licenseNumber);
 
     Optional<DriverProfile> findByVehicleNumber(String vehicleNumber);

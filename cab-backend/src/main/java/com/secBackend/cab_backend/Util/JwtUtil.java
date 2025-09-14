@@ -1,4 +1,4 @@
-package com.secBackend.cab_backend.jwt;
+package com.secBackend.cab_backend.Util;
 
 import com.secBackend.cab_backend.enumerations.Role;
 import io.jsonwebtoken.Claims;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
-import java.util.function.Function;
 
 @Component
 public class JwtUtil {

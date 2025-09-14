@@ -1,6 +1,4 @@
 package com.secBackend.cab_backend.controller;
-
-import com.secBackend.cab_backend.enumerations.Role;
 import com.secBackend.cab_backend.service.AdminService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

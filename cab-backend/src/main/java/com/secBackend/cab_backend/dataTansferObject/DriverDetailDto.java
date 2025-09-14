@@ -1,5 +1,4 @@
 package com.secBackend.cab_backend.dataTansferObject;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

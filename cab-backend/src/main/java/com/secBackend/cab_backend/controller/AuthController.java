@@ -3,7 +3,7 @@ package com.secBackend.cab_backend.controller;
 import com.secBackend.cab_backend.exception.InvalidPasswordException;
 import com.secBackend.cab_backend.exception.UserAlreadyExistsException;
 import com.secBackend.cab_backend.exception.UserNotFoundException;
-import com.secBackend.cab_backend.jwt.JwtUtil;
+import com.secBackend.cab_backend.Util.JwtUtil;
 import com.secBackend.cab_backend.dataTansferObject.LoginRequest;
 import com.secBackend.cab_backend.dataTansferObject.RegisterUserRequest;
 import com.secBackend.cab_backend.model.User;
