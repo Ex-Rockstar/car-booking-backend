@@ -19,7 +19,6 @@ public class DriverProfile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @OneToOne
     @JoinColumn(name = "user_id")
     @JsonBackReference

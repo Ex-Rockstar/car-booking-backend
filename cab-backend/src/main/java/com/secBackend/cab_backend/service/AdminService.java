@@ -1,4 +1,5 @@
 package com.secBackend.cab_backend.service;
+
 import com.secBackend.cab_backend.dataTansferObject.DriverDetailDto;
 import com.secBackend.cab_backend.enumerations.Role;
 import com.secBackend.cab_backend.model.DriverProfile;
@@ -16,34 +17,41 @@ public class AdminService {
 
     private final UserRepository userRepository;
     private final DriverProfileRepository driverProfileRepository;
+
+    // Constructor injection
     public AdminService(UserRepository userRepository, DriverProfileRepository driverProfileRepository) {
         this.userRepository = userRepository;
         this.driverProfileRepository = driverProfileRepository;
     }
 
+    // Get all customers
     public ResponseEntity<?> getAllCustomer() {
         List<User> users = userRepository.findAllByRole(Role.CUSTOMER);
         if(users.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No user found");
         }
         return ResponseEntity.status(HttpStatus.OK).body(users);
-
-
     }
+
+    // Get all drivers with details
     public ResponseEntity<?> getAllDriver() {
-    List<DriverProfile> drivers = driverProfileRepository.findAll();
+        List<DriverProfile> drivers = driverProfileRepository.findAll();
 
-    if (drivers.isEmpty()) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No drivers found");
-    }
+        if (drivers.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No drivers found");
+        }
 
-    List<DriverDetailDto> driverData=drivers.stream().
-                                    map(dp->new DriverDetailDto(dp.getId(),dp.getUser().getId(),
-                                                                           dp.getUser().getUsername(),
-                                                                           dp.getUser().getEmail(),
-                                                                           dp.getUser().getPhoneNumber(),
-                                                                           dp.getLicenseNumber(),
-                                                                           dp.getVehicleNumber() )).toList();
-    return ResponseEntity.status(HttpStatus.OK).body(driverData);
+        List<DriverDetailDto> driverData = drivers.stream()
+                .map(dp -> new DriverDetailDto(
+                        dp.getId(),
+                        dp.getUser().getId(),
+                        dp.getUser().getUsername(),
+                        dp.getUser().getEmail(),
+                        dp.getUser().getPhoneNumber(),
+                        dp.getLicenseNumber(),
+                        dp.getVehicleNumber()
+                )).toList();
+
+        return ResponseEntity.status(HttpStatus.OK).body(driverData);
     }
 }

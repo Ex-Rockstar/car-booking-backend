@@ -13,32 +13,33 @@ import org.springframework.stereotype.Component;
 public class SecurityConfiguration {
 
     private final JwtFilter jwtFilter;
+
+    // Constructor injection
     public SecurityConfiguration(JwtFilter jwtFilter){
         this.jwtFilter = jwtFilter;
     }
 
     @Bean
-    //PasswordEncoder For Encode The Password
+    // Password encoder for hashing passwords
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) // Disable CSRF
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/auth/**").permitAll() // Public endpoints
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
                                 .requestMatchers("/api/cabs/**","/api/driver/**").hasRole("DRIVER")
                                 .anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .formLogin(formLogin ->formLogin.disable())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session
+                .formLogin(formLogin -> formLogin.disable()) // Disable form login
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter
 
-                return http.build();
+        return http.build();
     }
-
-
 }

@@ -7,9 +7,11 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-//Driver Repository
-public interface DriverProfileRepository extends JpaRepository<DriverProfile,Long> {
+public interface DriverProfileRepository extends JpaRepository<DriverProfile, Long> {
+
+    // Find driver by license number
     Optional<DriverProfile> findByLicenseNumber(String licenseNumber);
 
+    // Find driver by vehicle number
     Optional<DriverProfile> findByVehicleNumber(String vehicleNumber);
 }

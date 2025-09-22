@@ -1,6 +1,5 @@
 package com.secBackend.cab_backend.service;
 
-
 import com.secBackend.cab_backend.model.DriverProfile;
 import com.secBackend.cab_backend.dataTansferObject.RegisterUserRequest;
 import com.secBackend.cab_backend.enumerations.Role;
@@ -15,16 +14,15 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 import java.util.Optional;
 
-
 @Service
 public class AuthService {
-
 
     private final UserRepository userRepo;
     private final DriverProfileRepository driverRepo;
     private final BCryptPasswordEncoder passwordEncoder;
+    private DriverProfile driverProfile;
 
-    //Constructor For The Above Field
+    // Constructor injection
     public AuthService(UserRepository userRepo,
                        DriverProfileRepository driverRepo,
                        BCryptPasswordEncoder passwordEncoder) {
@@ -32,53 +30,52 @@ public class AuthService {
         this.driverRepo = driverRepo;
         this.passwordEncoder = passwordEncoder;
     }
-    private DriverProfile driverProfile;
 
+    // Register a user (customer or driver)
+    public ResponseEntity<?> registerUser(RegisterUserRequest registerUserRequest){
+        User user = new User();
+        user.setUsername(registerUserRequest.getUserName());
+        user.setEmail(registerUserRequest.getEmail());
+        user.setPhoneNumber(registerUserRequest.getPhoneNumber());
+        user.setPassword(passwordEncoder.encode(registerUserRequest.getPassword()));
+        user.setRole(Role.valueOf(registerUserRequest.getRole().toUpperCase()));
 
-    //Register The User
-   public ResponseEntity<?> registerUser(RegisterUserRequest registerUserRequest){
-       User user = new User();
-       user.setUsername(registerUserRequest.getUserName());
-       user.setEmail(registerUserRequest.getEmail());
-       user.setPhoneNumber(registerUserRequest.getPhoneNumber());
-       user.setPassword(passwordEncoder.encode(registerUserRequest.getPassword()));
-       user.setRole(Role.valueOf(registerUserRequest.getRole().toUpperCase()));
+        // Save customer
+        if(registerUserRequest.getDriverDetails() == null){
+            userRepo.save(user);
+        }
 
-       if(registerUserRequest.getDriverDetails()==null){
-           userRepo.save(user);
-       }
+        // If registering a driver
+        if(user.getRole() == Role.DRIVER && registerUserRequest.getDriverDetails() != null){
+            Optional<DriverProfile> existingDriver = driverRepo.findByLicenseNumber(registerUserRequest.getDriverDetails().getLicenseNumber());
+            if(existingDriver.isPresent()){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Diving Licence Already Exist"));
+            }
+            existingDriver = driverRepo.findByVehicleNumber(registerUserRequest.getDriverDetails().getVehicleNumber());
+            if(existingDriver.isPresent()){
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "vehicle already exist"));
+            }
 
-        //If The Register User Is Driver
-       if(user.getRole()==Role.DRIVER && registerUserRequest.getDriverDetails() != null){
-           Optional<DriverProfile> existingDriver=driverRepo.findByLicenseNumber(registerUserRequest.getDriverDetails().getLicenseNumber());
-           if(existingDriver.isPresent()){
-               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "Diving Licence Already Exist"));
-           }
-           existingDriver=driverRepo.findByVehicleNumber(registerUserRequest.getDriverDetails().getVehicleNumber());
-           if(existingDriver.isPresent()){
-               return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("message", "vehicle already exist"));
-           }
-           driverProfile = new DriverProfile();
-           driverProfile.setUser(user);
-           driverProfile.setLicenseNumber(registerUserRequest.getDriverDetails().
-                   getLicenseNumber());
-           driverProfile.setVehicleNumber(registerUserRequest.getDriverDetails().
-                   getVehicleNumber());
-           userRepo.save(user);
-           driverRepo.save(driverProfile);
-       }
+            driverProfile = new DriverProfile();
+            driverProfile.setUser(user);
+            driverProfile.setLicenseNumber(registerUserRequest.getDriverDetails().getLicenseNumber());
+            driverProfile.setVehicleNumber(registerUserRequest.getDriverDetails().getVehicleNumber());
 
-       return  ResponseEntity.status(HttpStatus.OK).body(Map.of("message",
-               registerUserRequest.getRole()+" registered successfully!"));
-   }
+            userRepo.save(user);
+            driverRepo.save(driverProfile);
+        }
 
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message",
+                registerUserRequest.getRole() + " registered successfully!"));
+    }
+
+    // Find user by email
     public Optional<User> findEmail(String email) {
-       return userRepo.findByEmail(email);
+        return userRepo.findByEmail(email);
     }
 
+    // Find user by phone number
     public Optional<User> findPhonenumber(String phoneNumber) {
-       return  userRepo.findByPhoneNumber(phoneNumber);
+        return userRepo.findByPhoneNumber(phoneNumber);
     }
-
-
 }

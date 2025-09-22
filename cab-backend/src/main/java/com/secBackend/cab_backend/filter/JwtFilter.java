@@ -20,56 +20,53 @@ import java.util.List;
 public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
+
+    // Constructor injection
     public JwtFilter(JwtUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
     }
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        try{
-            //Get Token From Request
+        try {
+            // Get JWT token from Authorization header
             final String authHeader = request.getHeader("Authorization");
-            String email=null;
-            String jwtToken=null;
+            String email = null;
+            String jwtToken = null;
             if (authHeader != null && authHeader.startsWith("Bearer ")) {
                 jwtToken = authHeader.substring(7);
-                email=jwtUtil.getSubject(jwtToken);
+                email = jwtUtil.getSubject(jwtToken);
             }
+
+            // Validate token and set authentication
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                String role=jwtUtil.getRole(jwtToken);
-                List<SimpleGrantedAuthority> authorities=List.of(new SimpleGrantedAuthority("ROLE_"+role));
-                //Validate Jwt Token
-                if(jwtUtil.validateToken(jwtToken,email)){
+                String role = jwtUtil.getRole(jwtToken);
+                List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
+                if (jwtUtil.validateToken(jwtToken, email)) {
                     UsernamePasswordAuthenticationToken authToken =
-                            new UsernamePasswordAuthenticationToken(email,null, authorities);
+                            new UsernamePasswordAuthenticationToken(email, null, authorities);
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);
                 }
-
             }
-            filterChain.doFilter(request,response);
 
-        }
-        //Signature Exception :JWT signature does not match locally computed signature
-        catch (SignatureException  ex){
+            filterChain.doFilter(request, response);
+
+        } catch (SignatureException ex) {
+            // Invalid JWT signature
             response.setContentType("application/json");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.getWriter().write("{ \"error\": \"Invalid JWT signature\", \"message\": \"" + ex.getMessage() + "\" }");
 
-
-        }
-        //Fallback
-        catch (Exception ex) {
+        } catch (Exception ex) {
+            // General authentication error
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setContentType("application/json");
             response.getWriter().write(
                     "{ \"error\": \"Authentication error\", \"message\": \"" + ex.getMessage() + "\" }"
             );
         }
-
-
     }
 }

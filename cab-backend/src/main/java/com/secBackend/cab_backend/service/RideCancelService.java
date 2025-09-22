@@ -17,11 +17,13 @@ public class RideCancelService {
     private final UserRepository userRepository;
     private final RideRequestRepository rideRequestRepository;
 
+    // Constructor injection
     public RideCancelService(UserRepository userRepository, RideRequestRepository rideRequestRepository) {
         this.userRepository = userRepository;
         this.rideRequestRepository = rideRequestRepository;
     }
 
+    // Cancel a ride (driver or customer)
     @Transactional
     public ResponseEntity<?> cancelRide(Long rideId, String email, boolean isDriver) {
         User user = userRepository.findByEmail(email)

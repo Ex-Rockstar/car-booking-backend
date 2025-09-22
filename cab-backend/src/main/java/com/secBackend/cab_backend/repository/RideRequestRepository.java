@@ -12,14 +12,17 @@ import java.util.Optional;
 
 public interface RideRequestRepository extends JpaRepository<RideRequest, Long> {
 
+    // Lock the row for update to prevent concurrent modifications
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("SELECT r FROM RideRequest r WHERE r.id = :rideId")
     Optional<RideRequest> findByIdForUpdate(@Param("rideId") Long rideId);
+
+    // Find all rides by status
     List<RideRequest> findAllByStatus(RideRequest.RideStatus status);
 
+    // Find all rides for a specific customer
     List<RideRequest> findAllByUser_Id(Long customerId);
 
+    // Find all rides for a specific driver
     List<RideRequest> findAllByDriver_Id(Long driverId);
-
-
 }

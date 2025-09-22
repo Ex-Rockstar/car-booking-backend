@@ -1,8 +1,6 @@
 package com.secBackend.cab_backend.service;
 
-import com.secBackend.cab_backend.Util.GeoUtil;
 import com.secBackend.cab_backend.dataTansferObject.DriverLocation;
-import com.secBackend.cab_backend.dataTansferObject.DriverRideResponseDta;
 import com.secBackend.cab_backend.model.RideRequest;
 import com.secBackend.cab_backend.model.User;
 import com.secBackend.cab_backend.repository.RideRequestRepository;
@@ -13,25 +11,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 public class DriverRideService {
 
     private final RideRequestRepository rideRequestRepository;
     private final UserRepository userRepository;
-    private final CabLocationService cabLocationService;
 
+    // Constructor injection
     public DriverRideService(RideRequestRepository rideRequestRepository,
-                             UserRepository userRepository,
-                             CabLocationService cabLocationService) {
+                             UserRepository userRepository) {
         this.rideRequestRepository = rideRequestRepository;
         this.userRepository = userRepository;
-        this.cabLocationService = cabLocationService;
+
     }
 
+    // Start a ride
     @Transactional
     public ResponseEntity<?> startRide(Long rideId, String email) {
         User driver = userRepository.findByEmail(email)
@@ -55,6 +51,7 @@ public class DriverRideService {
         return ResponseEntity.ok(Map.of("message", "Ride started"));
     }
 
+    // Complete a ride
     @Transactional
     public ResponseEntity<?> completeRide(Long rideId, String email) {
         User driver = userRepository.findByEmail(email)
@@ -75,7 +72,7 @@ public class DriverRideService {
         ride.setCompletedAt(LocalDateTime.now());
         rideRequestRepository.save(ride);
 
-        //make driver available again
+        // Make driver available again
         driver.getDriverProfile().setAvailable(true);
         userRepository.save(driver);
 

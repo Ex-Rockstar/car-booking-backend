@@ -6,12 +6,14 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 public class HttpClientUtil {
-    private final RestTemplate restTemplate = new RestTemplate();
 
+    private final RestTemplate restTemplate = new RestTemplate(); // Spring's HTTP client
+
+    // Send POST request with JSON body and API key, return response as string
     public String postJson(String orsUrl, String body, String apiKey) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", apiKey);
+        headers.setContentType(MediaType.APPLICATION_JSON); // set content type
+        headers.set("Authorization", apiKey); // set API key header
 
         HttpEntity<String> entity = new HttpEntity<>(body, headers);
         ResponseEntity<String> response =
@@ -21,6 +23,6 @@ public class HttpClientUtil {
             throw new RuntimeException("ORS API call failed: " + response.getStatusCode() + " - " + response.getBody());
         }
 
-        return response.getBody();
+        return response.getBody(); // return JSON response
     }
 }

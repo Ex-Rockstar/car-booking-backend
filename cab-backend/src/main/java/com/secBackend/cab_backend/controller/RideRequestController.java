@@ -16,26 +16,29 @@ public class RideRequestController {
     private final RideCancelService rideCancelService;
     private final RideHistoryService rideHistoryService;
 
+    // Constructor injection
     public RideRequestController(RideRequestService rideRequestService, RideCancelService rideCancelService, RideHistoryService rideHistoryService) {
         this.rideRequestService = rideRequestService;
         this.rideCancelService = rideCancelService;
         this.rideHistoryService = rideHistoryService;
     }
 
+    // Customer requests a ride
     @PostMapping("/request")
     public ResponseEntity<?> requestRide(@RequestBody RideRequestDto rideRequestDto, Authentication authentication) {
         String email = authentication.getName();
         return rideRequestService.createRide(rideRequestDto, email);
     }
 
+    // Customer cancels a ride
     @PostMapping("/{rideId}/cancel")
     public ResponseEntity<?> cancelRideByCustomer(@PathVariable Long rideId, Authentication auth) {
         return rideCancelService.cancelRide(rideId, auth.getName(), false);
     }
 
+    // Customer ride history
     @GetMapping("/history")
     public ResponseEntity<?> customerRideHistory(Authentication auth) {
         return rideHistoryService.getCustomerHistory(auth.getName());
     }
-
 }

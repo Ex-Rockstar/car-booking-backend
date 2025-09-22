@@ -13,16 +13,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/driver")
 public class DriverController {
 
-    private DriverService driverService;
+    private final DriverService driverService;
+
+    // Constructor injection
     public DriverController(DriverService driverService){
         this.driverService = driverService;
     }
 
+    // Update driver availability
     @PostMapping("/availability")
     public ResponseEntity<?> updateDriverAvailability(Authentication authentication,
-                                                     @RequestBody DriverAvailabilityDto driverAvailabilityDto) {
-        return driverService.setDriverAvailability(authentication.getName(),driverAvailabilityDto.isAvailable());
-
+                                                      @RequestBody DriverAvailabilityDto driverAvailabilityDto) {
+        return driverService.setDriverAvailability(authentication.getName(), driverAvailabilityDto.isAvailable());
     }
-
 }
