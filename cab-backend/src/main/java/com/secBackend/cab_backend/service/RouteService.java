@@ -41,6 +41,7 @@ public class RouteService {
 
             double distance = summary.path("distance").asDouble() / 1000.0; // meters → km
             double duration = summary.path("duration").asDouble() / 60.0;   // seconds → minutes
+            System.out.println("Distance and duration calculated:"+distance+" "+duration);
 
             return new RouteResult(distance, duration);
 

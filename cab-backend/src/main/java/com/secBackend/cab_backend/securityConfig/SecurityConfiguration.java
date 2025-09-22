@@ -28,10 +28,10 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/auth/register","/api/auth/login").permitAll()
+                                .requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
-                                .requestMatchers("/api/driver/**").hasRole("DRIVER")
+                                .requestMatchers("/api/cabs/**","/api/driver/**").hasRole("DRIVER")
                                 .anyRequest().authenticated())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(formLogin ->formLogin.disable())

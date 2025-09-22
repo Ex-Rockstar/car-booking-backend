@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,12 +38,21 @@ public class RideRequest {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "driver_id")
+    private User driver;
+    private LocalDateTime requestedAt;
+    private LocalDateTime acceptedAt;
+    private LocalDateTime startedAt;
+    private LocalDateTime completedAt;
+
 
     public enum RideStatus {
         PENDING,
         ACCEPTED,
-        REJECTED,
+        IN_PROGRESS,
+        COMPLETED,
         CANCELLED,
-        COMPLETED
+        REJECTED
     }
 }

@@ -2,6 +2,7 @@ package com.secBackend.cab_backend.model;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.secBackend.cab_backend.enumerations.DriverStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -27,6 +28,11 @@ public class DriverProfile {
     private String licenseNumber;
     @Column(unique = true, nullable = false)
     private String vehicleNumber;
+    @Column(nullable = false)
+    private boolean available = false;
+    @Enumerated(EnumType.STRING)
+    private DriverStatus driverStatus=DriverStatus.OFFLINE;
+
 
 
 }

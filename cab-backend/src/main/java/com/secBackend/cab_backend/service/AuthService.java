@@ -20,9 +20,9 @@ import java.util.Optional;
 public class AuthService {
 
 
-    private UserRepository userRepo;
-    private DriverProfileRepository driverRepo;
-    private BCryptPasswordEncoder passwordEncoder;
+    private final UserRepository userRepo;
+    private final DriverProfileRepository driverRepo;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     //Constructor For The Above Field
     public AuthService(UserRepository userRepo,
@@ -79,4 +79,6 @@ public class AuthService {
     public Optional<User> findPhonenumber(String phoneNumber) {
        return  userRepo.findByPhoneNumber(phoneNumber);
     }
+
+
 }

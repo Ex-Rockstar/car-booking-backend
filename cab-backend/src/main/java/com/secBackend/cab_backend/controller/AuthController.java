@@ -1,11 +1,13 @@
 package com.secBackend.cab_backend.controller;
 
+import com.secBackend.cab_backend.enumerations.DriverStatus;
 import com.secBackend.cab_backend.exception.InvalidPasswordException;
 import com.secBackend.cab_backend.exception.UserAlreadyExistsException;
 import com.secBackend.cab_backend.exception.UserNotFoundException;
 import com.secBackend.cab_backend.Util.JwtUtil;
 import com.secBackend.cab_backend.dataTansferObject.LoginRequest;
 import com.secBackend.cab_backend.dataTansferObject.RegisterUserRequest;
+import com.secBackend.cab_backend.model.DriverProfile;
 import com.secBackend.cab_backend.model.User;
 import com.secBackend.cab_backend.service.AuthService;
 import org.springframework.http.HttpStatus;
@@ -21,7 +23,8 @@ import java.util.Optional;
 public class AuthController {
 
 
-    private BCryptPasswordEncoder passwordEncoder;
+
+    private final BCryptPasswordEncoder passwordEncoder;
     private final AuthService authService;
     private final JwtUtil jwtUtil;
     //Constructor
@@ -29,6 +32,7 @@ public class AuthController {
         this.authService = authService;
         this.passwordEncoder = bCryptPasswordEncoder;
         this.jwtUtil = jwtUtil;
+
     }
 
     //User Registration Endpoint
@@ -56,7 +60,6 @@ public class AuthController {
         if(!passwordEncoder.matches(loginRequest.getPassword(),dbUser.getPassword())){
             throw new InvalidPasswordException("Password does not match!");
         }
-
         String token=jwtUtil.generateToken(dbUser.getEmail(),dbUser.getRole());
         return ResponseEntity.status(HttpStatus.OK).body(Map.of("token",token,
                 "role",dbUser.getRole(),

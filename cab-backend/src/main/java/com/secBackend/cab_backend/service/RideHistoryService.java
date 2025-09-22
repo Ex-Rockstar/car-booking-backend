@@ -1,0 +1,64 @@
+package com.secBackend.cab_backend.service;
+
+import com.secBackend.cab_backend.dataTansferObject.DriverHistoryDTO;
+import com.secBackend.cab_backend.model.RideRequest;
+import com.secBackend.cab_backend.model.User;
+import com.secBackend.cab_backend.repository.RideRequestRepository;
+import com.secBackend.cab_backend.repository.UserRepository;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+
+
+@Service
+public class RideHistoryService {
+
+    private final UserRepository userRepository;
+    private final RideRequestRepository rideRequestRepository;
+    public RideHistoryService(UserRepository userRepository, RideRequestRepository rideRequestRepository) {
+        this.userRepository = userRepository;
+        this.rideRequestRepository = rideRequestRepository;
+    }
+
+
+    public ResponseEntity<?> getCustomerHistory(String email) {
+        User customer = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        List<RideRequest> rides = rideRequestRepository.findAllByUser_Id(customer.getId());
+        if (rides.isEmpty()) {
+            return ResponseEntity.ok(Map.of("message", "No rides found"));
+        }
+        return ResponseEntity.ok(rides);
+    }
+
+    public ResponseEntity<?> getDriverHistory(String email) {
+        User driver = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Driver not found"));
+        List<RideRequest> rides = rideRequestRepository.findAllByDriver_Id(driver.getId());
+        if (rides.isEmpty()) {
+            return ResponseEntity.ok(Map.of("message", "No rides found"));
+        }
+        List<DriverHistoryDTO> driverHistory = rides.stream()
+                .map(his -> new DriverHistoryDTO(
+                        his.getId(),
+                        his.getUser().getId(),
+                        his.getUser().getUsername(),
+                        his.getUser().getPhoneNumber(),
+                        his.getPickUpLocation(),
+                        his.getDestinationLocation(),
+                        his.getAcceptedAt(),
+                        his.getStartedAt(),
+                        his.getCompletedAt(),
+                        his.getDistanceKm(),
+                        (double) his.getDurationMinutes(),
+                        his.getFare(),
+                        his.getStatus().name()
+                ))
+                .toList();
+
+
+        return ResponseEntity.ok(driverHistory);
+    }
+}
