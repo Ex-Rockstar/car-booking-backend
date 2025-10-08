@@ -31,7 +31,7 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/auth/**").permitAll() // Public endpoints
+                                .requestMatchers("/api/auth/**","/api/otp/**").permitAll() // Public endpoints
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/customer/**").hasRole("CUSTOMER")
                                 .requestMatchers("/api/cabs/**","/api/driver/**").hasRole("DRIVER")
