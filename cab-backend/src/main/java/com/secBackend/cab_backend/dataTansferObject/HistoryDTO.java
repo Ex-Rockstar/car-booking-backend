@@ -9,11 +9,11 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DriverHistoryDTO {
+public class HistoryDTO {
     private Long rideId;
-    private Long customerId;
-    private String customerName;
-    private String customerPhone;
+    private Long id;
+    private String name;
+    private String phone;
     private String pickUpLocation;
     private String dropOffLocation;
     private LocalDateTime acceptAt;

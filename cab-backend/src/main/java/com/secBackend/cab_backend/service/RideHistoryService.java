@@ -1,6 +1,6 @@
 package com.secBackend.cab_backend.service;
 
-import com.secBackend.cab_backend.dataTansferObject.DriverHistoryDTO;
+import com.secBackend.cab_backend.dataTansferObject.HistoryDTO;
 import com.secBackend.cab_backend.model.RideRequest;
 import com.secBackend.cab_backend.model.User;
 import com.secBackend.cab_backend.repository.RideRequestRepository;
@@ -32,7 +32,25 @@ public class RideHistoryService {
         if (rides.isEmpty()) {
             return ResponseEntity.ok(Map.of("message", "No rides found"));
         }
-        return ResponseEntity.ok(rides);
+        List<HistoryDTO> driverHistory = rides.stream()
+                .map(his -> new HistoryDTO(
+                        his.getId(),
+                        his.getDriver().getId(),
+                        his.getDriver().getUsername(),
+                        his.getDriver().getPhoneNumber(),
+                        his.getPickUpLocation(),
+                        his.getDestinationLocation(),
+                        his.getAcceptedAt(),
+                        his.getStartedAt(),
+                        his.getCompletedAt(),
+                        his.getDistanceKm(),
+                        (double) his.getDurationMinutes(),
+                        his.getFare(),
+                        his.getStatus().name()
+                ))
+                .toList();
+
+        return ResponseEntity.ok(driverHistory);
     }
 
     // Get ride history for driver
@@ -46,8 +64,8 @@ public class RideHistoryService {
         }
 
         // Map rides to DriverHistoryDTO
-        List<DriverHistoryDTO> driverHistory = rides.stream()
-                .map(his -> new DriverHistoryDTO(
+        List<HistoryDTO> driverHistory = rides.stream()
+                .map(his -> new HistoryDTO(
                         his.getId(),
                         his.getUser().getId(),
                         his.getUser().getUsername(),
