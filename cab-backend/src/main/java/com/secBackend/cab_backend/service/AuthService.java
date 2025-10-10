@@ -1,7 +1,7 @@
 package com.secBackend.cab_backend.service;
 
 import com.secBackend.cab_backend.model.DriverProfile;
-import com.secBackend.cab_backend.dataTansferObject.RegisterUserRequest;
+import com.secBackend.cab_backend.dataTransferObject.RegisterUserRequest;
 import com.secBackend.cab_backend.enumerations.Role;
 import com.secBackend.cab_backend.model.User;
 import com.secBackend.cab_backend.repository.DriverProfileRepository;

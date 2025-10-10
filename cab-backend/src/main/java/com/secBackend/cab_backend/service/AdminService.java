@@ -1,6 +1,6 @@
 package com.secBackend.cab_backend.service;
 
-import com.secBackend.cab_backend.dataTansferObject.DriverDetailDto;
+import com.secBackend.cab_backend.dataTransferObject.DriverDetailDto;
 import com.secBackend.cab_backend.enumerations.Role;
 import com.secBackend.cab_backend.model.DriverProfile;
 import com.secBackend.cab_backend.model.User;

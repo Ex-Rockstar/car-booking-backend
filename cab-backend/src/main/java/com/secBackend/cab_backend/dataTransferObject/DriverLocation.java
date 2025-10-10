@@ -1,10 +1,9 @@
-package com.secBackend.cab_backend.dataTansferObject;
+package com.secBackend.cab_backend.dataTransferObject;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor

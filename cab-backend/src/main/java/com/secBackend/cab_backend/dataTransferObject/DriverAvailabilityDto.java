@@ -1,4 +1,4 @@
-package com.secBackend.cab_backend.dataTansferObject;
+package com.secBackend.cab_backend.dataTransferObject;
 
 import lombok.Data;
 

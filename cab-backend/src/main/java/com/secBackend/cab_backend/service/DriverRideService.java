@@ -1,6 +1,5 @@
 package com.secBackend.cab_backend.service;
 
-import com.secBackend.cab_backend.dataTansferObject.DriverLocation;
 import com.secBackend.cab_backend.model.RideRequest;
 import com.secBackend.cab_backend.model.User;
 import com.secBackend.cab_backend.repository.RideRequestRepository;

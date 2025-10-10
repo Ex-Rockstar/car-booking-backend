@@ -1,6 +1,6 @@
 package com.secBackend.cab_backend.exception;
 
-import com.secBackend.cab_backend.dataTansferObject.ErrorResponse;
+import com.secBackend.cab_backend.dataTransferObject.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

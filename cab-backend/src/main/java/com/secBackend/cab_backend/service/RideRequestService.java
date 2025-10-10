@@ -1,10 +1,10 @@
 package com.secBackend.cab_backend.service;
 
 import com.secBackend.cab_backend.Util.GeoUtil;
-import com.secBackend.cab_backend.dataTansferObject.RideRequestDto;
-import com.secBackend.cab_backend.dataTansferObject.RideResponseDto;
-import com.secBackend.cab_backend.dataTansferObject.RouteResult;
-import com.secBackend.cab_backend.dataTansferObject.DriverLocation;
+import com.secBackend.cab_backend.dataTransferObject.RideRequestDto;
+import com.secBackend.cab_backend.dataTransferObject.RideResponseDto;
+import com.secBackend.cab_backend.dataTransferObject.RouteResult;
+import com.secBackend.cab_backend.dataTransferObject.DriverLocation;
 import com.secBackend.cab_backend.enumerations.Role;
 import com.secBackend.cab_backend.model.RideRequest;
 import com.secBackend.cab_backend.model.User;

@@ -3,7 +3,7 @@ package com.secBackend.cab_backend.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.secBackend.cab_backend.Util.HttpClientUtil;
-import com.secBackend.cab_backend.dataTansferObject.RouteResult;
+import com.secBackend.cab_backend.dataTransferObject.RouteResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,6 +1,6 @@
 package com.secBackend.cab_backend.controller;
 
-import com.secBackend.cab_backend.dataTansferObject.DriverAvailabilityDto;
+import com.secBackend.cab_backend.dataTransferObject.DriverAvailabilityDto;
 import com.secBackend.cab_backend.service.DriverService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

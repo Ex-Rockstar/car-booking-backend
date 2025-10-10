@@ -1,6 +1,6 @@
 package com.secBackend.cab_backend.controller;
 
-import com.secBackend.cab_backend.dataTansferObject.RideRequestDto;
+import com.secBackend.cab_backend.dataTransferObject.RideRequestDto;
 import com.secBackend.cab_backend.service.RideCancelService;
 import com.secBackend.cab_backend.service.RideHistoryService;
 import com.secBackend.cab_backend.service.RideRequestService;

@@ -1,6 +1,6 @@
 package com.secBackend.cab_backend.service;
 
-import com.secBackend.cab_backend.dataTansferObject.HistoryDTO;
+import com.secBackend.cab_backend.dataTransferObject.HistoryDTO;
 import com.secBackend.cab_backend.model.RideRequest;
 import com.secBackend.cab_backend.model.User;
 import com.secBackend.cab_backend.repository.RideRequestRepository;

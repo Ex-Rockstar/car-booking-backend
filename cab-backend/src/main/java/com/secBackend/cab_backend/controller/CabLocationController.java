@@ -1,6 +1,6 @@
 package com.secBackend.cab_backend.controller;
 
-import com.secBackend.cab_backend.dataTansferObject.DriverLocation;
+import com.secBackend.cab_backend.dataTransferObject.DriverLocation;
 import com.secBackend.cab_backend.service.CabLocationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
