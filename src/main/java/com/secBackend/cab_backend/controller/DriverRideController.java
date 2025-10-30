@@ -21,6 +21,11 @@ public class DriverRideController {
         this.rideCancelService = rideCancelService;
         this.rideHistoryService = rideHistoryService;
     }
+    @GetMapping("/accepted")
+    public ResponseEntity<?> getAcceptedDriverRide(Authentication authentication) {
+        return driverRideService.getAcceptedDriverRide(authentication.getName());
+
+    }
 
     // Start a ride
     @PostMapping("/{rideId}/start")

@@ -51,6 +51,7 @@ public class RideRequest {
     private LocalDateTime completedAt;
     private LocalDateTime scheduledTime;
     private int rentalHours;
+    private String cabType;
 
     public enum RideStatus {
         REQUESTED,

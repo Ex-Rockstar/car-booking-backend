@@ -33,34 +33,15 @@ public class AuthController {
         this.passwordEncoder = bCryptPasswordEncoder;
         this.jwtUtil = jwtUtil;
     }
-
-    // User Registration
-//    @PostMapping("/register")
-//    public ResponseEntity<?> registerUser(@RequestPart RegisterUserRequest registerUserRequest, @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
-//        System.out.println("registerUser"+registerUserRequest);
-//        if(authService.findEmail(registerUserRequest.getEmail()).isPresent() ||
-//                authService.findPhonenumber(registerUserRequest.getPhoneNumber()).isPresent()
-//        ){
-//            throw new UserAlreadyExistsException("Email or Phone number already exists!");
-//        }
-//        return ResponseEntity.status(HttpStatus.OK).body(authService.registerUser(registerUserRequest,imageFile));
-//    }
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(
-            @RequestParam("registerUserRequest") String registerUserRequestJson,
-            @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) throws IOException {
-
-        // Convert JSON string to object
-        ObjectMapper objectMapper = new ObjectMapper();
-        RegisterUserRequest registerUserRequest = objectMapper.readValue(registerUserRequestJson, RegisterUserRequest.class);
-
+    public ResponseEntity<?> registerUser(@RequestBody RegisterUserRequest registerUserRequest)  {
         System.out.println("registerUser"+registerUserRequest);
         if(authService.findEmail(registerUserRequest.getEmail()).isPresent() ||
                 authService.findPhonenumber(registerUserRequest.getPhoneNumber()).isPresent()
         ){
             throw new UserAlreadyExistsException("Email or Phone number already exists!");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(authService.registerUser(registerUserRequest,imageFile));
+        return ResponseEntity.status(HttpStatus.OK).body(authService.registerUser(registerUserRequest));
     }
 
     // User Login

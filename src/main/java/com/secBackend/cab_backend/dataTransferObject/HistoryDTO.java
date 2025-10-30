@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class HistoryDTO {
     private Long rideId;
     private Long id;
@@ -23,6 +23,10 @@ public class HistoryDTO {
     private Double durationMinutes;
     private int fare;
     private String status;
+    private String cabType;
+    private String rideType;
 
 
+    public HistoryDTO(Long id, Long id1, String username, String phoneNumber, String pickUpLocation, String destinationLocation, LocalDateTime acceptedAt, LocalDateTime startedAt, LocalDateTime completedAt, double distanceKm, double durationMinutes, int fare, String name) {
+    }
 }

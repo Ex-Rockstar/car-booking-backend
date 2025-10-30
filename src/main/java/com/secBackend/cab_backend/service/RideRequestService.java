@@ -190,6 +190,7 @@ public class RideRequestService {
         rideRequest.setUser(customer);
         rideRequest.setRentalHours(dto.getRentalHours());
         rideRequest.setScheduledTime(dto.getScheduledTime());
+        rideRequest.setCabType(dto.getCabType());
 
         // 6️⃣ Auto assign driver only for immediate rides
         if (rideType == RideType.ADVANCE) {

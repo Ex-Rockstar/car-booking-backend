@@ -12,6 +12,10 @@ public class RideRequestDto {
     private double pickUpLongitude;
     private double dropOffLatitude;
     private double dropOffLongitude;
+    private int numberOfCustomers;
+    private int distanceKm;
+    private int fare;
+    private int minitues;
     private String cabType;
     private String RideType;
     private LocalDateTime scheduledTime;

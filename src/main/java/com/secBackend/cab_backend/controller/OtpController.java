@@ -1,7 +1,11 @@
 package com.secBackend.cab_backend.controller;
 import com.secBackend.cab_backend.service.EmailService;
 import com.secBackend.cab_backend.service.OtpService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/otp")
@@ -16,14 +20,14 @@ public class OtpController {
     }
 
     @PostMapping("/generateotp/{emailId}")
-    public String generateOtp(@PathVariable String emailId){
+    public ResponseEntity<?> generateOtp(@PathVariable String emailId){
         String otp = otpService.generateOtp(emailId);
         emailService.sendEmail(emailId, otp);
-        return "OTP sent successfully to " + emailId;
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message","otp generated successfully for "+emailId));
     }
     @PostMapping("/verifyotp/{emailId}/{otp}")
-    public boolean verifyOtp(@PathVariable String emailId, @PathVariable String otp) {
-        return otpService.verifyOtp(emailId, otp);
+    public ResponseEntity<?> verifyOtp(@PathVariable String emailId, @PathVariable String otp) {
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message",otpService.verifyOtp(emailId, otp))) ;
 
     }
 }

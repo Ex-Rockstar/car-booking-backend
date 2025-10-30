@@ -34,7 +34,7 @@ public class AuthService {
     }
 
     // Register a user (customer or driver)
-    public ResponseEntity<?> registerUser(RegisterUserRequest registerUserRequest, MultipartFile imageFile) throws IOException {
+    public ResponseEntity<?> registerUser(RegisterUserRequest registerUserRequest){
         User user = new User();
         user.setUsername(registerUserRequest.getUserName());
         user.setEmail(registerUserRequest.getEmail());
@@ -62,8 +62,10 @@ public class AuthService {
             driverProfile.setUser(user);
             driverProfile.setLicenseNumber(registerUserRequest.getDriverDetails().getLicenseNumber());
             driverProfile.setVehicleNumber(registerUserRequest.getDriverDetails().getVehicleNumber());
-            driverProfile.setProfilePictureData(imageFile.getBytes());
-
+            driverProfile.setMake(registerUserRequest.getDriverDetails().getMake());
+            driverProfile.setModel(registerUserRequest.getDriverDetails().getModel());
+            driverProfile.setColor(registerUserRequest.getDriverDetails().getColor());
+            driverProfile.setLicenceExpiryDate(registerUserRequest.getDriverDetails().getLicenceExpiryDate());
             userRepo.save(user);
             driverRepo.save(driverProfile);
         }

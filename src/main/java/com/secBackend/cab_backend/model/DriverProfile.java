@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,8 +33,11 @@ public class DriverProfile {
     private boolean available = false;
     @Enumerated(EnumType.STRING)
     private DriverStatus driverStatus=DriverStatus.OFFLINE;
-    @Lob
-    private byte[] profilePictureData;
+    private String make;
+    private String model;
+    private String color;
+    private Date licenceExpiryDate;
+
 
 
 

@@ -4,5 +4,7 @@ public enum RideType {
     LOCAL,
     INTERCITY,
     ADVANCE,
-    RENTAL
+    RENTAL;
+
+
 }

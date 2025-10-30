@@ -1,5 +1,6 @@
 package com.secBackend.cab_backend.service;
 
+import com.secBackend.cab_backend.dataTransferObject.DriverDetailDto;
 import com.secBackend.cab_backend.model.DriverProfile;
 import com.secBackend.cab_backend.model.User;
 import com.secBackend.cab_backend.repository.DriverProfileRepository;
@@ -39,5 +40,30 @@ public class DriverService {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(Map.of("Message", "Driver Availability Updated to " + available));
+    }
+
+    public ResponseEntity<?> getProfileData(String email) {
+        User user=userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        if(user.getDriverProfile() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("Message", "Driver Profile Not Found"));
+        }
+        DriverProfile profile=user.getDriverProfile();
+        DriverDetailDto driverDetailDto=new DriverDetailDto();
+        driverDetailDto.setId(profile.getId());
+        driverDetailDto.setUserId(user.getId());
+        driverDetailDto.setUserName(user.getUsername());
+        driverDetailDto.setEmail(user.getEmail());
+        driverDetailDto.setPhoneNumber(user.getPhoneNumber());
+        driverDetailDto.setLicenseNumber(profile.getLicenseNumber());
+        driverDetailDto.setVehicleNumber(profile.getVehicleNumber());
+        driverDetailDto.setMake(profile.getMake());
+        driverDetailDto.setModel(profile.getModel());
+        driverDetailDto.setColor(profile.getColor());
+        driverDetailDto.setLicenceExpiryDate(String.valueOf(profile.getLicenceExpiryDate()));
+        return  ResponseEntity.status(HttpStatus.OK)
+                .body(Map.of("data", driverDetailDto));
+
+
     }
 }

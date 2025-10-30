@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,17 +18,17 @@ public class RegisterUserRequest {
     private String role;
     private DriverDetails driverDetails;
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class DriverDetails{
         private String licenseNumber;
         private String vehicleNumber;
+        private String make;
+        private String model;
+        private String color;
+        private Date licenceExpiryDate;
 
-        public String getLicenseNumber() {
-            return licenseNumber;
-        }
-
-        public String getVehicleNumber() {
-            return vehicleNumber;
-        }
     }
 
 }

@@ -36,9 +36,5 @@ public class RideRequestController {
         return rideCancelService.cancelRide(rideId, auth.getName(), false);
     }
 
-    // Customer ride history
-    @GetMapping("/history")
-    public ResponseEntity<?> customerRideHistory(Authentication auth) {
-        return rideHistoryService.getCustomerHistory(auth.getName());
-    }
+
 }

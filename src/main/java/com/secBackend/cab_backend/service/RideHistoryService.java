@@ -23,35 +23,6 @@ public class RideHistoryService {
         this.rideRequestRepository = rideRequestRepository;
     }
 
-    // Get ride history for customer
-    public ResponseEntity<?> getCustomerHistory(String email) {
-        User customer = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
-
-        List<RideRequest> rides = rideRequestRepository.findAllByUser_Id(customer.getId());
-        if (rides.isEmpty()) {
-            return ResponseEntity.ok(Map.of("message", "No rides found"));
-        }
-        List<HistoryDTO> driverHistory = rides.stream()
-                .map(his -> new HistoryDTO(
-                        his.getId(),
-                        his.getDriver().getId(),
-                        his.getDriver().getUsername(),
-                        his.getDriver().getPhoneNumber(),
-                        his.getPickUpLocation(),
-                        his.getDestinationLocation(),
-                        his.getAcceptedAt(),
-                        his.getStartedAt(),
-                        his.getCompletedAt(),
-                        his.getDistanceKm(),
-                        (double) his.getDurationMinutes(),
-                        his.getFare(),
-                        his.getStatus().name()
-                ))
-                .toList();
-
-        return ResponseEntity.ok(driverHistory);
-    }
 
     // Get ride history for driver
     public ResponseEntity<?> getDriverHistory(String email) {

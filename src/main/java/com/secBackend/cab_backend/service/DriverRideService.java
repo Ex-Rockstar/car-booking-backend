@@ -117,4 +117,10 @@ public class DriverRideService {
         return ResponseEntity.ok(responseDtoList);
     }
 
+    public ResponseEntity<?> getAcceptedDriverRide(String email) {
+        User driver = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("Driver not found"));
+        RideRequest currRide=rideRequestRepository.findByDriver_IdAndStatus(driver.getId(), RideRequest.RideStatus.ACCEPTED);
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("message", currRide));
+    }
 }
