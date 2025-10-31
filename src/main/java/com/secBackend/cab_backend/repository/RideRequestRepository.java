@@ -30,6 +30,8 @@ public interface RideRequestRepository extends JpaRepository<RideRequest, Long> 
 
     RideRequest findByDriver_IdAndStatus(Long driverId, RideRequest.RideStatus status);
 
+    Optional<RideRequest> findById(Long id);
+
 
     List<RideRequest> findAllByRideTypeAndStatusAndScheduledTimeAfter(RideType rideType, RideRequest.RideStatus rideStatus, LocalDateTime now);
 }

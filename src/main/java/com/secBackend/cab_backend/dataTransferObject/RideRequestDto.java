@@ -1,7 +1,6 @@
 package com.secBackend.cab_backend.dataTransferObject;
 
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 @Data
@@ -17,7 +16,12 @@ public class RideRequestDto {
     private int fare;
     private int minitues;
     private String cabType;
-    private String RideType;
+    private String RideType; // Make sure field name matches exactly
     private LocalDateTime scheduledTime;
     private int rentalHours;
+
+    // Add getter with null safety
+    public String getRideType() {
+        return RideType != null ? RideType : "LOCAL";
+    }
 }

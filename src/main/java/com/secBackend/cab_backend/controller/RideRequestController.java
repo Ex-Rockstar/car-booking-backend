@@ -27,6 +27,7 @@ public class RideRequestController {
     @PostMapping("/request")
     public ResponseEntity<?> requestRide(@RequestBody RideRequestDto rideRequestDto, Authentication authentication) {
         String email = authentication.getName();
+        System.out.println("Ride Request: " + rideRequestDto);
         return rideRequestService.createRide(rideRequestDto, email);
     }
 

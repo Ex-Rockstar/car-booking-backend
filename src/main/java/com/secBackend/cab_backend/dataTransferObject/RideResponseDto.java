@@ -7,6 +7,9 @@ import java.time.LocalDateTime;
 @Data
 public class RideResponseDto {
     private Long rideId;
+    private Long driverId;
+    private String driverName;
+    private String phoneNumber;
     private String pickUpLocation;
     private String destinationLocation;
     private LocalDateTime ScheduledDateTime;

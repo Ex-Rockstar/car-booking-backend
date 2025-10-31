@@ -2,6 +2,7 @@ package com.secBackend.cab_backend.service;
 
 import com.secBackend.cab_backend.dataTransferObject.CustomerHomePageDto;
 import com.secBackend.cab_backend.dataTransferObject.HistoryDTO;
+import com.secBackend.cab_backend.dataTransferObject.RideResponseDto;
 import com.secBackend.cab_backend.model.RideRequest;
 import com.secBackend.cab_backend.model.User;
 import com.secBackend.cab_backend.repository.RideRequestRepository;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 public class CustomerService {
     private final UserRepository userRepository;
-    private final RideRequestRepository  rideRequestRepository;
+    private final RideRequestRepository rideRequestRepository;
 
     public CustomerService(UserRepository userRepository, RideRequestRepository rideRequestRepository) {
         this.userRepository = userRepository;
@@ -41,7 +42,9 @@ public class CustomerService {
 
         // Get all rides for the customer
         List<RideRequest> thisUserAllRides = rideRequestRepository.findAllByUser_Id(currentUser.getId());
-        List<RideRequest> removeUncompltedRides=thisUserAllRides.stream().filter(ride-> !ride.getStatus().toString().equals("COMPLETED")).toList();
+        List<RideRequest> removeUncompltedRides = thisUserAllRides.stream()
+                .filter(ride -> !ride.getStatus().toString().equals("COMPLETED"))
+                .toList();
 
         // Initialize counters
         int totalBookings = removeUncompltedRides.size();
@@ -53,28 +56,27 @@ public class CustomerService {
 
         // Loop through rides to categorize and calculate
         for (RideRequest ride : thisUserAllRides) {
-            // Assuming getFare() or getAmount() gives total ride cost
-            if(!ride.getStatus().toString().equals("COMPLETED")){
-                continue;
-            }
-            if (ride.getFare() != 0) {
-                totalSpent += ride.getFare();
-            }
+            // Only count completed rides for spending
+            if (ride.getStatus().toString().equals("COMPLETED")) {
+                if (ride.getFare() != 0) {
+                    totalSpent += ride.getFare();
+                }
 
-            if (ride.getRideType() != null) {
-                switch (ride.getRideType().toString()) {
-                    case "LOCAL":
-                        totalTripBooking++;
-                        break;
-                    case "INTERCITY":
-                        totalInterCityBooking++;
-                        break;
-                    case "RENTAL":
-                        totalRentalBooking++;
-                        break;
-                    case "ADVANCE":
-                        totalReserveBooking++;
-                        break;
+                if (ride.getRideType() != null) {
+                    switch (ride.getRideType().toString()) {
+                        case "LOCAL":
+                            totalTripBooking++;
+                            break;
+                        case "INTERCITY":
+                            totalInterCityBooking++;
+                            break;
+                        case "RENTAL":
+                            totalRentalBooking++;
+                            break;
+                        case "ADVANCE":
+                            totalReserveBooking++;
+                            break;
+                    }
                 }
             }
         }
@@ -89,7 +91,7 @@ public class CustomerService {
 
         System.out.println("customerHomePage loaded......");
 
-        return ResponseEntity.status(HttpStatus.OK).body(Map.of("data",response));
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("data", response));
     }
 
     public ResponseEntity<?> getCustomerRideHistory(String email) {
@@ -128,4 +130,98 @@ public class CustomerService {
         return ResponseEntity.ok(Map.of("data", completedRides));
     }
 
+    public ResponseEntity<?> getCustomerCurrentRide(String rideId) {
+        try {
+            Optional<RideRequest> currRide = rideRequestRepository.findById(Long.valueOf(rideId));
+            if (currRide.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "Ride not found"));
+            }
+
+            RideRequest ride = currRide.get();
+            RideResponseDto response = new RideResponseDto();
+
+            // Populate response DTO
+            response.setRideId(ride.getId());
+
+            if (ride.getDriver() != null) {
+                response.setDriverId(ride.getDriver().getId());
+                response.setDriverName(ride.getDriver().getUsername());
+                response.setPhoneNumber(ride.getDriver().getPhoneNumber());
+            } else {
+                response.setDriverId(null);
+                response.setDriverName("Driver not assigned yet");
+                response.setPhoneNumber("N/A");
+            }
+
+            response.setPickUpLocation(ride.getPickUpLocation());
+            response.setDestinationLocation(ride.getDestinationLocation());
+            response.setScheduledDateTime(ride.getScheduledTime()); // Fixed field name
+            response.setDistance(ride.getDistanceKm());
+            response.setDurationMinutes(ride.getDurationMinutes());
+            response.setFare(ride.getFare());
+            response.setStatus(ride.getStatus().toString());
+
+            System.out.println("response"+response);
+
+            return ResponseEntity.ok(Map.of("data", response));
+
+        } catch (NumberFormatException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("message", "Invalid ride ID format"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("message", "Error retrieving ride details"));
+        }
+    }
+
+    // Additional method to get current active ride for a customer
+    public ResponseEntity<?> getCustomerActiveRide(String email) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("message", "User not found"));
+        }
+
+        User currentUser = userOpt.get();
+
+        // Find active rides (REQUESTED, ACCEPTED, IN_PROGRESS)
+        List<RideRequest> activeRides = rideRequestRepository.findAllByUser_Id(currentUser.getId()).stream()
+                .filter(ride ->
+                        ride.getStatus() == RideRequest.RideStatus.REQUESTED ||
+                                ride.getStatus() == RideRequest.RideStatus.ACCEPTED ||
+                                ride.getStatus() == RideRequest.RideStatus.IN_PROGRESS)
+                .toList();
+
+        if (activeRides.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("message", "No active ride found"));
+        }
+
+        // Return the most recent active ride
+        RideRequest latestActiveRide = activeRides.stream()
+                .max((r1, r2) -> r2.getRequestedAt().compareTo(r1.getRequestedAt()))
+                .orElse(activeRides.get(0));
+
+        RideResponseDto response = new RideResponseDto();
+        response.setRideId(latestActiveRide.getId());
+
+        if (latestActiveRide.getDriver() != null) {
+            response.setDriverId(latestActiveRide.getDriver().getId());
+            response.setDriverName(latestActiveRide.getDriver().getUsername());
+            response.setPhoneNumber(latestActiveRide.getDriver().getPhoneNumber());
+        } else {
+            response.setDriverId(null);
+            response.setDriverName("Driver not assigned yet");
+            response.setPhoneNumber("N/A");
+        }
+
+        response.setPickUpLocation(latestActiveRide.getPickUpLocation());
+        response.setDestinationLocation(latestActiveRide.getDestinationLocation());
+        response.setScheduledDateTime(latestActiveRide.getScheduledTime());
+        response.setDistance(latestActiveRide.getDistanceKm());
+        response.setDurationMinutes(latestActiveRide.getDurationMinutes());
+        response.setFare(latestActiveRide.getFare());
+        response.setStatus(latestActiveRide.getStatus().toString());
+
+        return ResponseEntity.ok(Map.of("data", response));
+    }
 }
